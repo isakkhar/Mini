@@ -1,0 +1,18 @@
+{% extends 'mini/base.html' %}
+{% block title %}Posts by {{ author.name }}{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h3 class="color-white">Posts by {{ author.name }}</h3>
+    <ul>
+        {% for post in posts %}
+            <li>
+                <a href="{% url 'post_detail' slug=post.slug %}" class="color-white">{{ post.title }}</a>
+                <span class="color-gray-500">({{ post.published_date|date:"d M Y" }})</span>
+            </li>
+        {% empty %}
+            <li>No posts found for this author.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'home' %}" class="color-white">← Back to Home</a>
+</div>
+{% endblock %}

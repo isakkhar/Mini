@@ -1,0 +1,191 @@
+{% extends 'mini/base.html' %}
+{% load static %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <!-- Left Sidebar -->
+    <div class="col-lg-3 mb-4">
+      <div class="sidebar bg-gray-850 border-gray-800 p-3">
+        <h5 class="color-white mb-3">About the Author</h5>
+        <div class="text-center mb-3">
+          {% if post.author.profile_image %}
+            <img src="{{ post.author.profile_image.url }}" alt="{{ post.author.name }}" class="rounded-circle" width="80">
+          {% else %}
+            <img src="{% static 'assets/imgs/template/ava.jpg' %}" alt="{{ post.author.name }}" class="rounded-circle" width="80">
+          {% endif %}
+          <div class="mt-2 color-gray-500">{{ post.author.name }}</div>
+        </div>
+        <div>
+          <strong>Category:</strong>
+          <a href="{% url 'posts_by_category' category_slug=post.category.slug %}" class="color-white">{{ post.category.name }}</a>
+        </div>
+        <div>
+          <strong>Published:</strong> {{ post.published_date|date:"d M Y" }}
+        </div>
+        <div>
+          <strong>Tags:</strong>
+          {% for tag in post.tags.all %}
+            <a href="{% url 'posts_by_tag' tag.slug %}" class="badge bg-info text-dark">{{ tag.name }}</a>
+          {% empty %}
+            <span class="text-muted">No tags</span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content: Post & Comments -->
+    <div class="col-lg-6 mb-4">
+      <div class="row mt-50 align-items-end">
+        <div class="col-lg-9 col-md-8">
+          <h3 class="color-linear mb-30">{{ post.title }}</h3>
+          <div class="box-author mb-20">
+            {% if post.author.profile_image %}
+              <img src="{{ post.author.profile_image.url }}" alt="{{ post.author.name }}">
+            {% else %}
+              <img src="{% static 'assets/imgs/template/ava.jpg' %}" alt="{{ post.author.name }}">
+            {% endif %}
+            <div class="author-info">
+              <h6 class="color-gray-700">{{ post.author.name }}</h6>
+              <span class="color-gray-700 text-sm mr-30">{{ post.published_date|date:"d M Y" }}</span>
+              <span class="color-gray-700 text-sm">{{ post.read_time }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100%;height:auto;">
+      {% endif %}
+      <div class="mt-4" style="text-align: justify;">
+        {{ post.content|linebreaks }}
+      </div>
+      <a href="{% url 'home' %}" class="color-white">← Back to Home</a>
+
+      <!-- Comments Section -->
+      <div class="box-comments border-gray-800 mb-5 mt-5">
+        <h3 class="text-heading-2 color-white">{{ comments.count }} Comments</h3>
+        <div class="list-comments-single">
+          {% for comment in comments %}
+            <div class="item-comment{% if forloop.counter > 1 %} item-comment-sub{% endif %}">
+              <div class="comment-left">
+                <div class="box-author mb-20">
+                  <img src="{% static 'assets/imgs/template/ava.jpg' %}" alt="{{ comment.name }}">
+                  <div class="author-info">
+                    <h6 class="color-gray-700">{{ comment.name }}</h6>
+                    <span class="color-gray-700 text-sm mr-30">{{ comment.created|date:"d M, Y" }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="comment-right">
+                <div class="text-comment text-xl color-gray-500 bg-gray-850 border-gray-800">
+                  {{ comment.body|linebreaks }}
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="color-gray-500">No comments yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Styled Comment Form -->
+      <div class="box-form-comments mb-50">
+        <h4 class="text-heading-4 color-gray-300 mb-40">Leave a comment</h4>
+        <div class="box-forms">
+          {% if new_comment %}
+            <div class="alert alert-success">Your comment has been added!</div>
+          {% endif %}
+          <form method="post">
+            {% csrf_token %}
+            {{ comment_form.body }}
+            <div class="row mt-20">
+              <div class="col-sm-6 mb-20">
+                {{ comment_form.name }}
+                {{ comment_form.email }}
+                <input class="cb-agree" type="checkbox" id="cb-agree">
+                <label for="cb-agree" class="text-sm color-gray-500 pl-25">Save my name, email, and website in this browser for the next time I comment.</label>
+              </div>
+              <div class="col-sm-6 text-end">
+                <button type="submit" class="btn btn-linear">Post Comment</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="col-lg-3 mb-4">
+      <div class="sidebar bg-gray-850 border-gray-800 p-3">
+        <h5 class="color-white mb-3">Categories</h5>
+        <ul class="list-unstyled">
+          {% for cat in categories %}
+            <li>
+              <a href="{% url 'posts_by_category' category_slug=cat.slug %}" class="color-gray-500">{{ cat.name }}</a>
+              <span class="badge bg-gray-800">{{ cat.num_posts|default:cat.posts.count }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+       
+        <!-- <h5 class="color-white mt-4 mb-3">Popular Posts</h5> -->
+        <div class="box-sidebar bg-gray-850 border-gray-800 mb-4">
+          <div class="head-sidebar">
+            <h5 class="line-bottom">Popular Posts</h5>
+          </div>
+          <div class="content-sidebar">
+            <div class="list-posts">
+              {% for pop in popular_posts %}
+              <div class="item-post border-gray-800 wow animate__animated animate__fadeIn mb-3">
+                <a href="{% url 'post_detail' slug=pop.slug %}" class="color-gray-500 d-block">
+                  <strong>{{ pop.title|truncatewords:8 }}</strong>
+                </a>
+                <span class="color-gray-700 text-xs">{{ pop.published_date|date:"d M Y" }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Last Comments Sidebar -->
+      <div class="box-sidebar bg-gray-850 border-gray-800 mb-4">
+        <div class="head-sidebar wow animate__animated animate__fadeIn">
+          <h5 class="line-bottom">Last Comments</h5>
+        </div>
+        <div class="content-sidebar">
+          <div class="list-comments">
+            {% for c in last_comments %}
+            <div class="item-comment border-gray-800 wow animate__animated animate__fadeIn">
+              <p class="color-gray-500 mb-20">“ {{ c.body|truncatewords:15 }} ”</p>
+              <div class="box-author-small">
+                <img src="{% static 'assets/imgs/template/ava.jpg' %}" alt="{{ c.name }}">
+                <div class="author-info">
+                  <span class="d-block color-gray-700 text-sm">{{ c.name }}</span>
+                  <span class="color-gray-700 text-xs">{{ c.created|date:"d M Y" }}</span>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+            <div class="color-gray-500">No comments yet.</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="box-sidebar bg-gray-850 border-gray-800">
+        <div class="head-sidebar">
+          <h5 class="line-bottom d-inline-block wow animate__animated animate__fadeIn">Popular Tags</h5>
+        </div>
+        <div class="content-sidebar pb-20">
+          {% for tag in tags %}
+            <a class="btn btn-tags bg-gray-850 border-gray-800 mr-10 mb-10 bdrd16 wow animate__animated animate__fadeIn"
+               href="{% url 'posts_by_tag' tag.slug %}">{{ tag.name }}</a>
+          {% empty %}
+            <span class="color-gray-500">No tags available.</span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

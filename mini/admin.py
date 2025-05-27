@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Author, Post, Comment, Tag
+from .models import Category, Author, Post, Comment, Tag, ContactMessage, SiteSetting, Portfolio, Service, Testimonial, Partner
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -36,3 +36,31 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone', 'subject', 'created')
+    search_fields = ('name', 'email', 'subject')
+    date_hierarchy = 'created'
+
+@admin.register(SiteSetting)
+class SiteSettingAdmin(admin.ModelAdmin):
+    list_display = ('phone', 'email', 'address')
+
+@admin.register(Portfolio)
+class PortfolioAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'created')
+    search_fields = ('title', 'description')
+    list_filter = ('category',)
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+
+@admin.register(Testimonial)
+class TestimonialAdmin(admin.ModelAdmin):
+    list_display = ('name', 'company')
+
+@admin.register(Partner)
+class PartnerAdmin(admin.ModelAdmin):
+    list_display = ('name', 'website')

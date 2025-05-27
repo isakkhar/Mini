@@ -1,0 +1,89 @@
+{% extends 'mini/base.html' %}
+{% load static %}
+{% block title %}{{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-xl-10 col-lg-12 m-auto">
+      <div class="pt-30 border-bottom border-gray-800 pb-20">
+        <div class="box-breadcrumbs">
+          <ul class="breadcrumb">
+            <li><a class="home" href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'portfolio' %}">Portfolio</a></li>
+            <li><span>{{ project.title }}</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="row mt-50 align-items-end">
+        <div class="col-lg-8 m-auto text-center">
+          <h2 class="color-linear">{{ project.title }}</h2>
+        </div>
+      </div>
+      <div class="row mt-30 mb-50">
+        <div class="swiper-container swiper-group-2">
+          <div class="swiper-wrapper wow animate__animated animate__fadeIn">
+            <div class="swiper-slide">
+              <div class="image-detail mb-30">
+                <img class="bdrd16" src="{{ project.image.url }}" alt="{{ project.title }}">
+              </div>
+            </div>
+            <!-- If you have multiple images, loop here -->
+          </div>
+          <div class="swiper-pagination"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="content-detail border-gray-800">
+            <h3 class="color-white mb-30 wow animate__animated animate__fadeIn">Project Details</h3>
+            <p class="text-lg color-gray-500 wow animate__animated animate__fadeIn">{{ project.description }}</p>
+            {% if project.link %}
+            <h3 class="color-white mt-50 mb-30 wow animate__animated animate__fadeIn">Project Link</h3>
+            <p class="text-lg color-gray-500 wow animate__animated animate__fadeIn">
+              <a class="text-white" href="{{ project.link }}" target="_blank">{{ project.link }}</a>
+            </p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="sidebar">
+            <div class="box-sidebar bg-gray-850 border-gray-800">
+              <div class="head-sidebar wow animate__animated animate__fadeIn">
+                <h5 class="line-bottom">Project information</h5>
+              </div>
+              <div class="content-sidebar">
+                <div class="list-comments">
+                  <div class="item-comment border-gray-800 wow animate__animated animate__fadeIn">
+                    <p class="color-gray-200 mb-10 text-uppercase">Category</p>
+                    <p class="color-gray-500">{{ project.get_category_display }}</p>
+                  </div>
+                  <!-- Add more project info fields as needed -->
+                  <div class="item-comment border-gray-800 wow animate__animated animate__fadeIn">
+                    <p class="color-gray-200 mb-10 text-uppercase">Project date</p>
+                    <p class="color-gray-500">{{ project.created|date:"d F, Y" }}</p>
+                  </div>
+                  {% if project.link %}
+                  <div class="item-comment border-gray-800 wow animate__animated animate__fadeIn">
+                    <p class="color-gray-200 mb-10 text-uppercase">Project URL</p>
+                    <p class="color-gray-500"><a class="text-white" href="{{ project.link }}" target="_blank">{{ project.link }}</a></p>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="d-inline-block pt-10 wow animate__animated animate__fadeIn">
+              <div class="d-flex align-item-center">
+                <h6 class="d-inline-block color-gray-500 mr-10">Share</h6>
+                <a class="icon-media icon-fb" href="#"></a>
+                <a class="icon-media icon-tw" href="#"></a>
+                <a class="icon-media icon-printest" href="#"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -93,11 +93,11 @@
                               <a class="color-gray-500 text-xl" href="{% url 'posts_by_category' category_slug=cat.slug %}">{{ cat.name }}</a>
                             </div>
                           </div>
-                          <div class="cat-right">
+                          <!-- <div class="cat-right">
                             <a class="btn btn-small text-sm color-gray-500 bg-gray-800" href="{% url 'posts_by_category' category_slug=cat.slug %}">
                               {{ cat.num_posts }}
                             </a>
-                          </div>
+                          </div> -->
                         </div>
                         {% endfor %}
                       </div>

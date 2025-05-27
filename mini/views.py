@@ -1,17 +1,26 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
+from django.contrib import messages
 from django.db.models import Count
-from .models import Post, Author, Category, Tag, Comment
-from .forms import CommentForm  # You'll create this form
+from .models import Post, Author, Category, Tag, Comment, Portfolio, Service, Testimonial, Partner
+from .forms import CommentForm, ContactForm  # You'll create this form
+# from mini.views import home, about, post_detail, posts_by_author, posts_by_category, posts_by_tag
 
 def home(request):
-    posts = Post.objects.filter(status='published').order_by('-published_date')[:10]
+    post_list = Post.objects.filter(status='published').order_by('-published_date')
+    paginator = Paginator(post_list, 6)  # Show 6 posts per page
+    page_number = request.GET.get('page')
+    posts = paginator.get_page(page_number)
+
     editors_picks = Post.objects.filter(status='published', is_editors_pick=True).order_by('-published_date')[:3]
     categories = Category.objects.all()
+    tags = Tag.objects.annotate(num_posts=Count('posts')).order_by('-num_posts')[:12]
+
     return render(request, 'mini/index.html', {
         'posts': posts,
         'editors_picks': editors_picks,
         'categories': categories,
+        'tags': tags,
     })
 
 def about(request):
@@ -75,9 +84,40 @@ def posts_by_tag(request, tag_slug):
     popular_posts = Post.objects.filter(status='published').order_by('-views', '-published_date')[:5]
     tags = Tag.objects.all()
     recent_comments = Comment.objects.filter(active=True).order_by('-created')[:3]
+    recent_posts = Post.objects.filter(status='published').order_by('-published_date')[:5]
     return render(request, 'mini/posts_by_tag.html', {
         'tag': tag,
         'posts': posts,
         'categories': categories,
         'tags': tags,
+        'recent_posts': recent_posts,
     })
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your message has been sent successfully!")
+            return redirect('contact')
+    else:
+        form = ContactForm()
+    return render(request, 'mini/contact.html', {'form': form})
+
+def portfolio(request):
+    projects = Portfolio.objects.all().order_by('-created')
+    categories = Portfolio.CATEGORY_CHOICES
+    services = Service.objects.all()
+    testimonials = Testimonial.objects.all()
+    partners = Partner.objects.all()
+    return render(request, 'mini/portfolio.html', {
+        'projects': projects,
+        'categories': categories,
+        'services': services,
+        'testimonials': testimonials,
+        'partners': partners,
+    })
+
+def portfolio_detail(request, slug):
+    project = get_object_or_404(Portfolio, slug=slug)
+    return render(request, 'mini/portfolio_detail.html', {'project': project})

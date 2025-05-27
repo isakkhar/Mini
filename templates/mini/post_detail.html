@@ -99,11 +99,15 @@
             {% csrf_token %}
             {{ comment_form.body }}
             <div class="row mt-20">
-              <div class="col-sm-6 mb-20">
-                {{ comment_form.name }}
-                {{ comment_form.email }}
-                <input class="cb-agree" type="checkbox" id="cb-agree">
-                <label for="cb-agree" class="text-sm color-gray-500 pl-25">Save my name, email, and website in this browser for the next time I comment.</label>
+              <div class="col-sm-12 mb-20">
+                 <div class="mb-3">
+                  {{ comment_form.name }}
+                </div>
+                <div class="mb-3">
+                  {{ comment_form.email }}
+                </div>
+                <!-- <input class="cb-agree" type="checkbox" id="cb-agree"> -->
+                <!-- <label for="cb-agree" class="text-sm color-gray-500 pl-25">Save my name, email, and website in this browser for the next time I comment.</label> -->
               </div>
               <div class="col-sm-6 text-end">
                 <button type="submit" class="btn btn-linear">Post Comment</button>
@@ -117,15 +121,31 @@
     <!-- Right Sidebar -->
     <div class="col-lg-3 mb-4">
       <div class="sidebar bg-gray-850 border-gray-800 p-3">
-        <h5 class="color-white mb-3">Categories</h5>
-        <ul class="list-unstyled">
-          {% for cat in categories %}
-            <li>
-              <a href="{% url 'posts_by_category' category_slug=cat.slug %}" class="color-gray-500">{{ cat.name }}</a>
-              <span class="badge bg-gray-800">{{ cat.num_posts|default:cat.posts.count }}</span>
-            </li>
-          {% endfor %}
-        </ul>
+         <div class="box-sidebar bg-gray-850 border-gray-800">
+                    <div class="head-sidebar">
+                      <h5 class="line-bottom">Categories</h5>
+                    </div>
+                    <div class="content-sidebar">
+                      <div class="list-cats">
+                        {% for cat in categories %}
+                        <div class="item-cats border-gray-800 wow animate__animated animate__fadeIn">
+                          <div class="cat-left">
+                            <!-- If you have category images, add here -->
+                            <!-- <div class="image-cat"><a href="{% url 'posts_by_category' category_slug=cat.slug %}"><img src="{{ cat.image.url }}" alt="{{ cat.name }}"></a></div> -->
+                            <div class="info-cat">
+                              <a class="color-gray-500 text-xl" href="{% url 'posts_by_category' category_slug=cat.slug %}">{{ cat.name }}</a>
+                            </div>
+                          </div>
+                          <!-- <div class="cat-right">
+                            <a class="btn btn-small text-sm color-gray-500 bg-gray-800" href="{% url 'posts_by_category' category_slug=cat.slug %}">
+                              {{ cat.num_posts }}
+                            </a>
+                          </div> -->
+                        </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </div>
        
         <!-- <h5 class="color-white mt-4 mb-3">Popular Posts</h5> -->
         <div class="box-sidebar bg-gray-850 border-gray-800 mb-4">
@@ -139,7 +159,7 @@
                 <a href="{% url 'post_detail' slug=pop.slug %}" class="color-gray-500 d-block">
                   <strong>{{ pop.title|truncatewords:8 }}</strong>
                 </a>
-                <span class="color-gray-700 text-xs">{{ pop.published_date|date:"d M Y" }}</span>
+                <!-- <span class="color-gray-700 text-xs">{{ pop.published_date|date:"d M Y" }}</span> -->
               </div>
               {% endfor %}
             </div>

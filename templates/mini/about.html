@@ -1,2 +1,25 @@
-<h1>About Page</h1>
-<p>This is the about page.</p>
+{% extends 'mini/base.html' %}
+{% load static %}
+{% block title %}About{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h1 class="color-linear mb-4">About Me</h1>
+      <p class="color-gray-500 lead mb-4">
+        Welcome to my blog! My name is <strong>Sakkhar</strong>, and I am passionate about sharing knowledge, ideas, and inspiration on technology, travel, lifestyle, and more.
+      </p>
+      <p class="color-gray-500 mb-4">
+        I use animation as a third dimension by which to simplify experiences and guide you through each and every interaction. I’m not adding motion just to spruce things up, but doing it in ways that make your experience better.
+      </p>
+      <p class="color-gray-500 mb-4">
+        On this blog, you'll find editor's picks, hot topics, and the latest posts from a variety of categories. Whether you're here for tips, reviews, or just to explore, I hope you enjoy your stay!
+      </p>
+      <div class="text-center mt-5">
+        <img src="{% static 'assets/imgs/template/logo.png' %}" alt="Logo" style="max-width: 120px;">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

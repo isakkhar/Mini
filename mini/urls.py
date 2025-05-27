@@ -1,5 +1,5 @@
 from django.urls import path
-from mini.views import home, about, post_detail, posts_by_author, posts_by_category, posts_by_tag
+from mini.views import home, about, post_detail, posts_by_author, posts_by_category, posts_by_tag, contact, portfolio, portfolio_detail
 
 urlpatterns = [
     path('', home, name='home'),
@@ -8,4 +8,8 @@ urlpatterns = [
     path('author/<int:author_id>/', posts_by_author, name='posts_by_author'),
     path('category/<slug:category_slug>/', posts_by_category, name='posts_by_category'),
     path('tag/<slug:tag_slug>/', posts_by_tag, name='posts_by_tag'),
+    path('contact/', contact, name='contact'),
+    path('portfolio/', portfolio, name='portfolio'),
+    path('portfolio/<slug:slug>/', portfolio_detail, name='portfolio_detail'),
+
 ]

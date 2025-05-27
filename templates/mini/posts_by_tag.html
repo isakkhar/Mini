@@ -1,0 +1,38 @@
+{% extends 'mini/base.html' %}
+{% load static %}
+{% block title %}Posts tagged "{{ tag.name }}"{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="color-linear mb-30">Posts tagged: {{ tag.name }}</h2>
+  <div class="row mt-70">
+    {% for post in posts %}
+      <div class="col-lg-4 mb-4">
+        <div class="card-blog-1 hover-up">
+          {% if post.image %}
+          <div class="card-image mb-20">
+            <a href="{% url 'post_detail' slug=post.slug %}">
+              <img src="{{ post.image.url }}" alt="{{ post.title }}">
+            </a>
+          </div>
+          {% endif %}
+          <div class="card-info">
+            <a href="{% url 'post_detail' slug=post.slug %}">
+              <h4 class="color-white mt-20">{{ post.title }}</h4>
+            </a>
+            <span class="color-gray-700 text-sm">{{ post.published_date|date:"d M Y" }}</span>
+            <p class="color-gray-500 mt-2">{{ post.content|truncatewords:20 }}</p>
+            <div class="mt-2">
+              <a class="btn btn-tag bg-gray-800 hover-up" href="{% url 'posts_by_category' category_slug=post.category.slug %}">{{ post.category.name }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <p class="color-gray-500">No posts found for this tag.</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

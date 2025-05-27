@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 import math
+from django.db.models import Count
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -23,6 +25,7 @@ class Author(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=60, unique=True)
+    image = models.ImageField(upload_to='tags/', blank=True, null=True)  # Optional, for tag images
 
     def __str__(self):
         return self.name
@@ -74,8 +77,84 @@ class Comment(models.Model):
     def __str__(self):
         return f'Comment by {self.name} on {self.post}'
 
-# Example for a view or context processor
-from .models import Tag
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=30, blank=True)
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
 
-tags = Tag.objects.all()
-# Add 'tags': tags to your context
+    def __str__(self):
+        return f"{self.name} - {self.subject}"
+
+class SiteSetting(models.Model):
+    phone = models.CharField(max_length=50, blank=True)
+    email = models.EmailField(blank=True)
+    address = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return "Site Settings"
+
+    class Meta:
+        verbose_name = "Site Setting"
+        verbose_name_plural = "Site Settings"
+
+class Portfolio(models.Model):
+    CATEGORY_CHOICES = [
+        ('web', 'Web Development'),
+        ('mobile', 'Mobile App'),
+        ('motion', 'Motion'),
+        ('graphic', 'Graphic Design'),
+    ]
+    title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='portfolio/')
+    description = models.TextField()
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    link = models.URLField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(max_length=200, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)
+            slug = base_slug
+            num = 1
+            while Portfolio.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{num}"
+                num += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+class Service(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    icon_class = models.CharField(max_length=50, help_text="CSS class for the icon (e.g. 'icon-motion')")
+
+    def __str__(self):
+        return self.title
+
+class Testimonial(models.Model):
+    name = models.CharField(max_length=100)
+    company = models.CharField(max_length=100, blank=True)
+    photo = models.ImageField(upload_to='testimonials/', blank=True, null=True)
+    content = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+class Partner(models.Model):
+    name = models.CharField(max_length=100)
+    logo = models.ImageField(upload_to='partners/')
+    website = models.URLField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+# Example for a view or context processor
+# from .models import Tag
+
+# tags = Tag.objects.annotate(num_posts=Count('posts')).order_by('-num_posts')[:12]

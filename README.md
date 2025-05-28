@@ -38,7 +38,7 @@ A full-featured blogging platform built using Django, designed for creating, edi
 
 ```bash
 git clone https://github.com/isakkhar/mini.git
-cd django-blog
+cd mini
 ```
 
 ### Set Up Virtual Environment

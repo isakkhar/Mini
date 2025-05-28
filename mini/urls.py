@@ -1,4 +1,5 @@
 from django.urls import path
+from . import views
 from mini.views import home, about, post_detail, posts_by_author, posts_by_category, posts_by_tag, contact, portfolio, portfolio_detail, category
 
 urlpatterns = [
@@ -12,5 +13,7 @@ urlpatterns = [
     path('portfolio/', portfolio, name='portfolio'),
     path('portfolio/<slug:slug>/', portfolio_detail, name='portfolio_detail'),
     path('category/', category, name='category'),
+    path('blog/', views.BlogListView.as_view(), name='blog-list'),
+
 
 ]

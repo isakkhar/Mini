@@ -2,26 +2,36 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.db.models import Count
+from django.views.generic import ListView
 from .models import Post, Author, Category, Tag, Comment, Portfolio, Service, Testimonial, Partner, Education, Experience
 from .forms import CommentForm, ContactForm  # You'll create this form
 # from mini.views import home, about, post_detail, posts_by_author, posts_by_category, posts_by_tag
 
 def home(request):
-    post_list = Post.objects.filter(status='published').order_by('-published_date')
-    paginator = Paginator(post_list, 6)  # Show 6 posts per page
-    page_number = request.GET.get('page')
-    posts = paginator.get_page(page_number)
-
-    editors_picks = Post.objects.filter(status='published', is_editors_pick=True).order_by('-published_date')[:3]
-    categories = Category.objects.all()
-    tags = Tag.objects.annotate(num_posts=Count('posts')).order_by('-num_posts')[:12]
-
-    return render(request, 'mini/index.html', {
-        'posts': posts,
+    editors_picks = Post.objects.filter(is_editors_pick=True)[:4]
+    popular_tags = Tag.objects.all()[:12]
+    recent_posts = Post.objects.order_by('-created_date')[:6]
+    popular_posts = Post.objects.order_by('-views')[:5]
+    last_comments = Comment.objects.order_by('-created')[:3]  # Removed select_related('author')
+    instagram_gallery = [
+        'assets/imgs/page/homepage1/gallery1.png',
+        'assets/imgs/page/homepage1/gallery2.png',
+        'assets/imgs/page/homepage1/gallery3.png',
+    ]
+    hot_topics = [
+        {'title': 'Sport', 'image': 'assets/imgs/page/homepage1/sport.png', 'article_count': 38, 'url': '#'},
+    ]
+    context = {
         'editors_picks': editors_picks,
-        'categories': categories,
-        'tags': tags,
-    })
+        'popular_tags': popular_tags,
+        'recent_posts': recent_posts,
+        'popular_posts': popular_posts,
+        'last_comments': last_comments,
+        'instagram_gallery': instagram_gallery,
+        'hot_topics': hot_topics,
+        'hot_topics_description': "Your hot topics description here",
+    }
+    return render(request, 'mini/index.html', context)
 
 def about(request):
     educations = Education.objects.all().order_by('-end_year')
@@ -131,3 +141,9 @@ def portfolio_detail(request, slug):
 def category(request):
     categories = Category.objects.all()
     return render(request, 'mini/category.html', {'categories': categories})
+
+class BlogListView(ListView):
+    model = Post
+    template_name = 'mini/blog_list.html'  # or your template
+    context_object_name = 'posts'
+    paginate_by = 10  # optional

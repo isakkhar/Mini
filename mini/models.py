@@ -154,6 +154,26 @@ class Partner(models.Model):
     def __str__(self):
         return self.name
 
+class Education(models.Model):
+    degree = models.CharField(max_length=200)
+    institution = models.CharField(max_length=200)
+    start_year = models.CharField(max_length=10)
+    end_year = models.CharField(max_length=10)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.degree} at {self.institution}"
+
+class Experience(models.Model):
+    title = models.CharField(max_length=200)
+    company = models.CharField(max_length=200)
+    start_year = models.CharField(max_length=10)
+    end_year = models.CharField(max_length=10)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.title} at {self.company}"
+
 # Example for a view or context processor
 # from .models import Tag
 

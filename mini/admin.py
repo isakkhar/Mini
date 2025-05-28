@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Author, Post, Comment, Tag, ContactMessage, SiteSetting, Portfolio, Service, Testimonial, Partner
+from .models import Category, Author, Post, Comment, Tag, ContactMessage, SiteSetting, Portfolio, Service, Testimonial, Partner, Education, Experience
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -64,3 +64,11 @@ class TestimonialAdmin(admin.ModelAdmin):
 @admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin):
     list_display = ('name', 'website')
+
+@admin.register(Education)
+class EducationAdmin(admin.ModelAdmin):
+    list_display = ('degree', 'institution', 'start_year', 'end_year')
+
+@admin.register(Experience)
+class ExperienceAdmin(admin.ModelAdmin):
+    list_display = ('title', 'company', 'start_year', 'end_year')

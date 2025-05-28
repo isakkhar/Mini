@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.db.models import Count
-from .models import Post, Author, Category, Tag, Comment, Portfolio, Service, Testimonial, Partner
+from .models import Post, Author, Category, Tag, Comment, Portfolio, Service, Testimonial, Partner, Education, Experience
 from .forms import CommentForm, ContactForm  # You'll create this form
 # from mini.views import home, about, post_detail, posts_by_author, posts_by_category, posts_by_tag
 
@@ -24,7 +24,12 @@ def home(request):
     })
 
 def about(request):
-    return render(request, 'mini/about.html')
+    educations = Education.objects.all().order_by('-end_year')
+    experiences = Experience.objects.all().order_by('-end_year')
+    return render(request, 'mini/about.html', {
+        'educations': educations,
+        'experiences': experiences,
+    })
 
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug, status='published')

@@ -16,10 +16,93 @@
       <p class="color-gray-500 mb-4">
         On this blog, you'll find editor's picks, hot topics, and the latest posts from a variety of categories. Whether you're here for tips, reviews, or just to explore, I hope you enjoy your stay!
       </p>
-      <div class="text-center mt-5">
+      <!-- <div class="text-center mt-5 mb-5">
         <img src="{% static 'assets/imgs/template/logo.png' %}" alt="Logo" style="max-width: 120px;">
+      </div> -->
+
+      <!-- Resume Download -->
+      <div class="text-center mb-5">
+        <a href="{% static 'assets/docs/resume.pdf' %}" class="btn btn-linear btn-radius-8" download>
+          <i class="fi-rr-download"></i> Download Resume
+        </a>
       </div>
+
+      <!-- Education Timeline -->
+      <h2 class="color-linear mb-4 mt-5">Education</h2>
+      <ul class="timeline">
+        {% for edu in educations %}
+        <li>
+          <div class="timeline-badge bg-primary"></div>
+          <div class="timeline-panel">
+            <h5 class="color-white mb-1">{{ edu.degree }}</h5>
+            <span class="color-gray-500">{{ edu.start_year }} - {{ edu.end_year }} | {{ edu.institution }}</span>
+            <p class="color-gray-500 mb-0">{{ edu.description }}</p>
+          </div>
+        </li>
+        {% empty %}
+        <li><div class="timeline-panel">No education records found.</div></li>
+        {% endfor %}
+      </ul>
+
+      <!-- Professional Experience Timeline -->
+      <h2 class="color-linear mb-4 mt-5">Professional Experience</h2>
+      <ul class="timeline">
+        {% for exp in experiences %}
+        <li>
+          <div class="timeline-badge bg-success"></div>
+          <div class="timeline-panel">
+            <h5 class="color-white mb-1">{{ exp.title }}</h5>
+            <span class="color-gray-500">{{ exp.start_year }} - {{ exp.end_year }} | {{ exp.company }}</span>
+            <p class="color-gray-500 mb-0">{{ exp.description }}</p>
+          </div>
+        </li>
+        {% empty %}
+        <li><div class="timeline-panel">No experience records found.</div></li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 </div>
+
+<!-- Timeline CSS (add to your static CSS file or inside a <style> block) -->
+<style>
+.timeline {
+  list-style: none;
+  padding: 0;
+  position: relative;
+}
+.timeline:before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #222;
+}
+.timeline > li {
+  position: relative;
+  margin-bottom: 40px;
+  padding-left: 50px;
+}
+.timeline-badge {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  position: absolute;
+  left: 12px;
+  top: 5px;
+  background: #0EA5EA;
+  border: 2px solid #fff;
+  z-index: 1;
+}
+.timeline-panel {
+  background: #18181b;
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.bg-primary { background: #0EA5EA !important; }
+.bg-success { background: #22c55e !important; }
+</style>
 {% endblock %}

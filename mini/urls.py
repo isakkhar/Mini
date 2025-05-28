@@ -1,5 +1,5 @@
 from django.urls import path
-from mini.views import home, about, post_detail, posts_by_author, posts_by_category, posts_by_tag, contact, portfolio, portfolio_detail
+from mini.views import home, about, post_detail, posts_by_author, posts_by_category, posts_by_tag, contact, portfolio, portfolio_detail, category
 
 urlpatterns = [
     path('', home, name='home'),
@@ -11,5 +11,6 @@ urlpatterns = [
     path('contact/', contact, name='contact'),
     path('portfolio/', portfolio, name='portfolio'),
     path('portfolio/<slug:slug>/', portfolio_detail, name='portfolio_detail'),
+    path('category/', category, name='category'),
 
 ]

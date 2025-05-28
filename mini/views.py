@@ -126,3 +126,8 @@ def portfolio(request):
 def portfolio_detail(request, slug):
     project = get_object_or_404(Portfolio, slug=slug)
     return render(request, 'mini/portfolio_detail.html', {'project': project})
+
+
+def category(request):
+    categories = Category.objects.all()
+    return render(request, 'mini/category.html', {'categories': categories})

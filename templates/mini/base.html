@@ -21,7 +21,7 @@
                 <li class="menu-item"><a class="color-gray-500" href="{% url 'about'%}">About</a>
                 </li>
                 <li class="menu-item"><a class="color-gray-500" href="{% url 'portfolio' %}">Portfolio</a>
-                <li class="menu-item"><a class="color-gray-500" href="#">Category</a>
+                <li class="menu-item"><a class="color-gray-500" href="{% url 'category' %}">Category</a>
                 </li>
                 <li><a class="color-gray-500" href="{% url 'contact' %}">Contact</a></li>
               </ul>
@@ -57,7 +57,7 @@
                 <ul class="mobile-menu font-heading">
                   <li class="has-children"><a href="{% url 'home' %}">Home</a>
                   </li>
-                  <li class="has-children"><a href="#">Category</a>
+                  <li class="has-children"><a href="{% url 'category' %}">Category</a>
                   </li>
                   <li class="has-children"><a href="#">Single Post</a>
                   </li>

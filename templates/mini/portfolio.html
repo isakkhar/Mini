@@ -64,6 +64,8 @@
           <span class="item-icon bg-gray-950 {{ service.icon_class }}"></span>
           <h5 class="color-white mb-15">{{ service.title|linebreaksbr }}</h5>
           <p class="text-base color-gray-700">{{ service.description }}</p>
+          <!-- <p class="color-gray-500 text-sm">{{ project.description|truncatewords:20 }}</p> -->
+
         </div>
       </div>
     {% endfor %}
@@ -112,22 +114,60 @@
   </div>
 </div>
 
-<!-- Partner Section -->
+<!-- Partners Section -->
 <div class="text-center mt-70 mb-50">
   <h2 class="color-linear d-inline-block mb-10 wow animate__animated animate__fadeInUp">Our Partners</h2>
   <p class="text-lg color-gray-500 wow animate__animated animate__fadeInUp">
     We are proud to collaborate with these amazing brands and organizations.
   </p>
 </div>
-<div class="row justify-content-center align-items-center mb-70">
-  {% for partner in partners %}
-    <div class="col-auto mb-4">
-      <a href="{{ partner.website|default:'#' }}" target="_blank" rel="noopener">
-        <img src="{{ partner.logo.url }}" alt="{{ partner.name }}" style="max-height:60px; max-width:140px;">
-      </a>
+<div class="list-logos mt-50 mb-30">
+  <div class="container">
+    <div class="row">
+      <div class="swiper-container swiper-group-1">
+        <div class="swiper-wrapper wow animate__animated animate__fadeIn">
+          {% for partner in partners %}
+            <div class="swiper-slide d-flex justify-content-center align-items-center">
+              <a href="{{ partner.website|default:'#' }}" target="_blank" style="display:inline-block;">
+                <div class="partner-logo-box">
+                  <img src="{{ partner.logo.url }}" alt="{{ partner.name }}">
+                </div>
+              </a>
+            </div>
+          {% empty %}
+            <div class="swiper-slide text-center color-gray-500">No partners yet.</div>
+          {% endfor %}
+        </div>
+        <!-- Swiper Arrows -->
+        <div class="swiper-button-prev swiper-button-prev-style-3"></div>
+        <div class="swiper-button-next swiper-button-next-style-3"></div>
+      </div>
     </div>
-  {% empty %}
-    <div class="col-12 text-center color-gray-500">No partners yet.</div>
-  {% endfor %}
+  </div>
 </div>
 {% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.Swiper) {
+    new Swiper('.swiper-group-3', {
+      slidesPerView: 2,
+      spaceBetween: 30,
+      loop: true,
+      navigation: {
+        nextEl: '.swiper-button-next-style-3',
+        prevEl: '.swiper-button-prev-style-3',
+      },
+      autoplay: {
+        delay: 3000, // 3 seconds per slide
+        disableOnInteraction: false
+      },
+      breakpoints: {
+        1200: { slidesPerView: 2 },
+        768: { slidesPerView: 1 },
+        0:   { slidesPerView: 1 }
+      }
+    });
+  }
+});
+</script>

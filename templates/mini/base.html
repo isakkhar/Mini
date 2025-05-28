@@ -3,16 +3,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}My Blog{% endblock %}</title>
+    <title>{% block title %}Sakkhar - Personal Blog{% endblock %}</title>
     <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="{% static 'assets/imgs/template/favicon.ico' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Header -->
  <header class="header sticky-bar bg-gray-900">
       <div class="container">
         <div class="main-header">
-          <div class="header-logo"><a class="d-flex" href="{% url 'home' %}"><img class="logo-night" alt="GenZ" src="{% static 'assets/imgs/template/logo.png' %}"><img class="d-none logo-day" alt="GenZ" src="{% static 'assets/imgs/template/logo-day.svg' %}"></a></div>
+          <div class="header-logo"><a class="d-flex" href="{% url 'home' %}">
+            {% if site_settings and site_settings.logo %}
+              <img src="{{ site_settings.logo.url }}" alt="Logo" style="height:100px;">
+            {% else %}
+              <img src="{% static 'assets/imgs/template/default-logo.png' %}" alt="Logo" style="height:60px;">
+            {% endif %}
+          </a></div>
           <div class="header-nav">
             <nav class="nav-main-menu d-none d-xl-block">
               <ul class="main-menu">
@@ -57,14 +64,15 @@
                 <ul class="mobile-menu font-heading">
                   <li class="has-children"><a href="{% url 'home' %}">Home</a>
                   </li>
+                  <li class="has-children"><a href="{% url 'about' %}">About</a>
+                  </li>
                   <li class="has-children"><a href="{% url 'category' %}">Category</a>
                   </li>
-                  <li class="has-children"><a href="#">Single Post</a>
-                  </li>
+                  
                   <li class="has-children"><a class="color-gray-500" href="{% url 'portfolio' %}">Portfolio</a>
                   </li>
-                  <li class="has-children"><a href="#">Pages</a>
-                  </li>
+                  <!-- <li class="has-children"><a href="#">Pages</a>
+                  </li> -->
                   <li><a href="{% url 'contact' %}">Contact</a></li>
                 </ul>
               </nav>
@@ -78,7 +86,7 @@
                 </div>
               </div>
             </div>
-            <div class="site-copyright color-gray-400 mt-30">Copyright 2025 &copy; Sakkhar - Personal Blog.<br>Designed by<a href="https://sakkhar.substack.com/" target="_blank">&nbsp; AliThemes</a></div>
+            <div class="site-copyright color-gray-400 mt-30">Copyright 2025 &copy; Sakkhar - Personal Blog.<br>Designed by<a href="https://sakkhar.substack.com/" target="_blank">&nbsp; Sakkhar</a></div>
           </div>
         </div>
       </div>
@@ -97,14 +105,22 @@
           <div class="row">
             <div class="col-lg-4 mb-30">
               <a class="wow animate__animated animate__fadeInUp" href="{% url 'home' %}">
-                <img class="logo-night" src="{% static 'assets/imgs/template/logo.png' %}" alt="Genz">
-                <img class="d-none logo-day" alt="GenZ" src="{% static 'assets/imgs/template/logo-day.svg' %}">
+                {% if site_settings and site_settings.logo %}
+                  <img class="logo-night" src="{{ site_settings.logo.url }}" alt="Logo" style="height:100px;">
+                {% else %}
+                  <img class="logo-night" src="{% static 'assets/imgs/template/logo.png' %}" alt="Logo" style="height:100px;">
+                {% endif %}
               </a>
               <p class="mb-20 mt-20 text-sm color-gray-500 wow animate__animated animate__fadeInUp">
-                When an unknown prnoto sans took a galley and scrambled it to make specimen book not only five When an unknown prnoto sans took a galley and scrambled it to five centurie.
+                <!-- You can add a description field to SiteSetting if you want -->
+                Welcome to {{ site_settings.site_name|default:"Personal Blog" }}!
               </p>
               <h6 class="color-white mb-5 wow animate__animated animate__fadeInUp">Address</h6>
-              <p class="text-sm color-gray-500 wow animate__animated animate__fadeInUp">123 Main Street<br>New York, NY 10001</p>
+              <p class="text-sm color-gray-500 wow animate__animated animate__fadeInUp">
+                {{ site_settings.address|default:"123 Main Street" }}<br>
+                {{ site_settings.email|default:"info@example.com" }}<br>
+                {{ site_settings.phone|default:"(123) 456-7890" }}
+              </p>
             </div>
             <div class="col-lg-4 mb-30">
               <h6 class="text-lg mb-30 color-white wow animate__animated animate__fadeInUp">Categories</h6>
@@ -140,13 +156,40 @@
              <div class="footer-bottom border-gray-800">
             <div class="row">
               <div class="col-lg-5 text-center text-lg-start">
-                <p class="text-base color-white wow animate__animated animate__fadeIn">© Created by<a class="copyright" href="http://alithemes.com" target="_blank"> AliThemes.com</a></p>
+                <p class="text-base color-white wow animate__animated animate__fadeIn">© Created by<a class="copyright" href="https://sakkhar.substack.com/" target="_blank"> Sakkhar</a></p>
               </div>
               <div class="col-lg-7 text-center text-lg-end">
                 <div class="box-socials">
-                  <div class="d-inline-block mr-30 wow animate__animated animate__fadeIn" data-wow-delay=".0s"><a class="icon-socials icon-twitter color-gray-500" href="https://twitter.com">Twitter</a></div>
-                  <div class="d-inline-block mr-30 wow animate__animated animate__fadeIn" data-wow-delay=".2s"><a class="icon-socials icon-linked color-gray-500" href="https://www.linkedin.com">LinkedIn</a></div>
-                  <div class="d-inline-block wow animate__animated animate__fadeIn" data-wow-delay=".4s"><a class="icon-socials icon-insta color-gray-500" href="https://www.instagram.com">Instagram</a></div>
+                  {% if site_settings.facebook %}
+                    <a class="icon-socials color-gray-500 mr-20" href="{{ site_settings.facebook }}" target="_blank" title="Facebook">
+                      <i class="fab fa-facebook-f"></i>
+                    </a>
+                  {% endif %}
+                  {% if site_settings.twitter %}
+                    <a class="icon-socials color-gray-500 mr-20" href="{{ site_settings.twitter }}" target="_blank" title="Twitter/X">
+                      <i class="fab fa-twitter"></i>
+                    </a>
+                  {% endif %}
+                  {% if site_settings.linkedin %}
+                    <a class="icon-socials color-gray-500 mr-20" href="{{ site_settings.linkedin }}" target="_blank" title="LinkedIn">
+                      <i class="fab fa-linkedin-in"></i>
+                    </a>
+                  {% endif %}
+                  {% if site_settings.instagram %}
+                    <a class="icon-socials color-gray-500 mr-20" href="{{ site_settings.instagram }}" target="_blank" title="Instagram">
+                      <i class="fab fa-instagram"></i>
+                    </a>
+                  {% endif %}
+                  {% if site_settings.youtube %}
+                    <a class="icon-socials color-gray-500 mr-20" href="{{ site_settings.youtube }}" target="_blank" title="YouTube">
+                      <i class="fab fa-youtube"></i>
+                    </a>
+                  {% endif %}
+                  {% if site_settings.github %}
+                    <a class="icon-socials color-gray-500" href="{{ site_settings.github }}" target="_blank" title="GitHub">
+                      <i class="fab fa-github"></i>
+                    </a>
+                  {% endif %}
                 </div>
               </div>
             </div>

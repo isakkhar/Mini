@@ -3344,11 +3344,11 @@ input {
   width: auto;
   transition-duration: 0.2s;
 }
-.footer .icon-socials:hover {
+/* .footer .icon-socials:hover {
   transform: translateY(-3px);
   transition-duration: 0.2s;
   color: rgb(14, 165, 234) !important;
-}
+} */
 .footer .icon-socials.icon-twitter {
   background: url(../imgs/template/icons/tw.svg) no-repeat 0px 0px;
   transition-duration: 0.2s;
@@ -6659,4 +6659,14 @@ iframe.google-map {
   max-height: 100%;
   object-fit: contain;
   display: block;
+}
+.icon-socials:hover,
+.icon-socials:focus,
+.icon-socials:active {
+    color: inherit !important;
+    background: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    transform: none !important;
+    text-decoration: none !important;
 }

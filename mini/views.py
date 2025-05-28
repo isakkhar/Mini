@@ -10,21 +10,24 @@ from .forms import CommentForm, ContactForm  # You'll create this form
 def home(request):
     editors_picks = Post.objects.filter(is_editors_pick=True)[:4]
     popular_tags = Tag.objects.all()[:12]
-    recent_posts = Post.objects.order_by('-created_date')[:6]
+    recent_posts_list = Post.objects.order_by('-created_date')
+    paginator = Paginator(recent_posts_list, 5)  # Show 5 posts per page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     popular_posts = Post.objects.order_by('-views')[:5]
-    last_comments = Comment.objects.order_by('-created')[:3]  # Removed select_related('author')
+    last_comments = Comment.objects.order_by('-created')[:3]
     instagram_gallery = [
         'assets/imgs/page/homepage1/gallery1.png',
         'assets/imgs/page/homepage1/gallery2.png',
         'assets/imgs/page/homepage1/gallery3.png',
     ]
-    hot_topics = [
-        {'title': 'Sport', 'image': 'assets/imgs/page/homepage1/sport.png', 'article_count': 38, 'url': '#'},
-    ]
+    hot_topics = Category.objects.filter(is_hot_topic=True)
     context = {
         'editors_picks': editors_picks,
         'popular_tags': popular_tags,
-        'recent_posts': recent_posts,
+        'page_obj': page_obj,  # Pass the paginated object
         'popular_posts': popular_posts,
         'last_comments': last_comments,
         'instagram_gallery': instagram_gallery,

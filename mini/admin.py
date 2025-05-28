@@ -3,9 +3,8 @@ from .models import Category, Author, Post, Comment, Tag, ContactMessage, SiteSe
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug')
-    search_fields = ('name',)
-    prepopulated_fields = {'slug': ('name',)}
+    list_display = ('name', 'is_hot_topic')
+    list_editable = ('is_hot_topic',)
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):

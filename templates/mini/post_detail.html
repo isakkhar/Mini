@@ -69,7 +69,11 @@
             <div class="item-comment{% if forloop.counter > 1 %} item-comment-sub{% endif %}">
               <div class="comment-left">
                 <div class="box-author mb-20">
-                  <img src="{% static 'assets/imgs/template/ava.jpg' %}" alt="{{ comment.name }}">
+                  {% if comment.author.image %}
+                    <img src="{{ comment.author.image.url }}" alt="{{ comment.author.name }}">
+                  {% else %}
+                    <img src="{% static 'assets/imgs/authors/default.png' %}" alt="{{ comment.author.name }}">
+                  {% endif %}
                   <div class="author-info">
                     <h6 class="color-gray-700">{{ comment.name }}</h6>
                     <span class="color-gray-700 text-sm mr-30">{{ comment.created|date:"d M, Y" }}</span>
@@ -130,8 +134,15 @@
                         {% for cat in categories %}
                         <div class="item-cats border-gray-800 wow animate__animated animate__fadeIn">
                           <div class="cat-left">
-                            <!-- If you have category images, add here -->
-                            <!-- <div class="image-cat"><a href="{% url 'posts_by_category' category_slug=cat.slug %}"><img src="{{ cat.image.url }}" alt="{{ cat.name }}"></a></div> -->
+                            <div class="image-cat">
+                              <a href="{% url 'posts_by_category' category_slug=cat.slug %}">
+                                {% if cat.image %}
+                                  <img src="{{ cat.image.url }}" alt="{{ cat.name }}">
+                                {% else %}
+                                  <img src="{% static 'assets/imgs/tags/default.png' %}" alt="{{ cat.name }}">
+                                {% endif %}
+                              </a>
+                            </div>
                             <div class="info-cat">
                               <a class="color-gray-500 text-xl" href="{% url 'posts_by_category' category_slug=cat.slug %}">{{ cat.name }}</a>
                             </div>

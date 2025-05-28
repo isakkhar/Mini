@@ -9,6 +9,8 @@ from django.utils.text import slugify
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=120, unique=True)
+    image = models.ImageField(upload_to='categories/', blank=True, null=True)  # Added image field
+    is_hot_topic = models.BooleanField(default=False)  # Added hot topic boolean field
 
     def __str__(self):
         return self.name
@@ -92,6 +94,13 @@ class SiteSetting(models.Model):
     phone = models.CharField(max_length=50, blank=True)
     email = models.EmailField(blank=True)
     address = models.CharField(max_length=255, blank=True)
+    logo = models.ImageField(upload_to='site_settings/', blank=True, null=True)
+    facebook = models.URLField(blank=True, null=True)
+    twitter = models.URLField(blank=True, null=True)
+    linkedin = models.URLField(blank=True, null=True)
+    instagram = models.URLField(blank=True, null=True)
+    youtube = models.URLField(blank=True, null=True)
+    github = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return "Site Settings"

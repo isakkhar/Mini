@@ -1,6 +1,6 @@
 {% extends 'mini/base.html' %}
 {% load static %}
-{% block title %}Home{% endblock %}
+<!-- {% block title %}Sakkhar - Personal Blog{% endblock %} -->
 {% block content %}
 <div class="cover-home1">
   <div class="container">
@@ -58,13 +58,17 @@
                         {% for topic in hot_topics %}
                         <div class="swiper-slide">
                           <div class="card-style-1">
-                            <a href="{{ topic.url }}">
+                            <a href="{% url 'posts_by_category' category_slug=topic.slug %}">
                               <div class="card-image">
-                                <img src="{% static topic.image %}" alt="Genz">
+                                {% if topic.image %}
+                                  <img src="{{ topic.image.url }}" alt="{{ topic.name }}">
+                                {% else %}
+                                  <img src="{% static 'assets/imgs/tags/default.png' %}" alt="{{ topic.name }}">
+                                {% endif %}
                                 <div class="card-info">
                                   <div class="info-bottom">
-                                    <h6 class="color-white mb-5">{{ topic.title }}</h6>
-                                    <p class="text-xs color-gray-500">{{ topic.article_count }} Articles</p>
+                                    <h6 class="color-white mb-5">{{ topic.name }}</h6>
+                                    <p class="text-xs color-gray-500">{{ topic.post_set.count }} Articles</p>
                                   </div>
                                 </div>
                               </div>
@@ -97,7 +101,7 @@
     <a class="color-gray-700 text-sm" href="{% url 'posts_by_tag' tag_slug=tag.slug %}"> #{{ tag.name }}</a>
   {% endfor %}
                     </div>
-                    <div class="col-5 text-end"><span class="color-gray-700 text-sm timeread">{{ post.read_time }} mins read</span></div>
+                    <div class="col-5 text-end"><span class="color-gray-700 text-sm timeread">{{ post.read_time }} </span></div>
                   </div>
                   <a href="{% url 'post_detail' slug=post.slug %}">
                     <h4 class="color-white mt-20">{{ post.title }}</h4>
@@ -161,7 +165,7 @@
               <h2 class="color-linear d-inline-block mb-10">Recent posts</h2>
               <p class="text-lg color-gray-500">Don't miss the latest trends</p>
               <div class="box-list-posts mt-70">
-                {% for post in recent_posts %}
+                {% for post in page_obj %}
                 <div class="card-list-posts wow animate__animated animate__fadeIn">
                   <div class="card-image hover-up">
                     <a href="{% url 'post_detail' slug=post.slug %}">
@@ -185,29 +189,44 @@
                         {% endfor %}
                       </div>
                       <div class="col-5 text-end">
-                        <span class="color-gray-700 text-sm timeread">{{ post.read_time }} mins read</span>
+                        <span class="color-gray-700 text-sm timeread">{{ post.read_time }}</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 {% endfor %}
               </div>
-              <!-- Pagination (optional, if you use page_obj in context) -->
-              {% if page_obj %}
-              <nav class="mb-50">
-                <ul class="pagination">
-                  {% if page_obj.has_previous %}
-                  <li class="page-item"><a class="page-link page-prev" href="?page={{ page_obj.previous_page_number }}"><i class="fi-rr-arrow-small-left"></i></a></li>
-                  {% endif %}
-                  {% for num in page_obj.paginator.page_range %}
-                    <li class="page-item {% if page_obj.number == num %}active{% endif %}"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-                  {% endfor %}
-                  {% if page_obj.has_next %}
-                  <li class="page-item"><a class="page-link page-next" href="?page={{ page_obj.next_page_number }}"><i class="fi-rr-arrow-small-right"></i></a></li>
-                  {% endif %}
-                </ul>
-              </nav>
-              {% endif %}
+              <!-- Pagination controls -->
+<nav class="mb-50">
+  <ul class="pagination">
+    <!-- Left arrow (previous page) -->
+    <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+      {% if page_obj.has_previous %}
+        <a class="page-link page-prev" href="?page={{ page_obj.previous_page_number }}">
+          <i class="fi-rr-arrow-small-left"></i>
+        </a>
+      {% else %}
+        <span class="page-link page-prev"><i class="fi-rr-arrow-small-left"></i></span>
+      {% endif %}
+    </li>
+    <!-- Page numbers -->
+    {% for num in page_obj.paginator.page_range %}
+      <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+      </li>
+    {% endfor %}
+    <!-- Right arrow (next page) -->
+    <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+      {% if page_obj.has_next %}
+        <a class="page-link page-next" href="?page={{ page_obj.next_page_number }}">
+          <i class="fi-rr-arrow-small-right"></i>
+        </a>
+      {% else %}
+        <span class="page-link page-next"><i class="fi-rr-arrow-small-right"></i></span>
+      {% endif %}
+    </li>
+  </ul>
+</nav>
             </div>
             <!-- Sidebar -->
             <div class="col-lg-4">
@@ -223,7 +242,7 @@
                       <div class="item-post wow animate__animated animate__fadeIn">
                         <div class="image-post"><a href="{{ post.url }}"><img src="{{ post.image.url }}" alt="Genz"></a></div>
                         <div class="info-post border-gray-800"><a href="{{ post.url }}">
-                            <h6 class="color-white">{{ post.title }}</h6></a><span class="color-gray-700">{{ post.read_time }} mins read</span>
+                            <h6 class="color-white">{{ post.title }}</h6></a><span class="color-gray-700">{{ post.read_time }}</span>
                           <ul class="d-inline-block">
                             <li class="color-gray-700">{{ post.date }}</li>
                           </ul>
